@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
-        android:label="learn_en"
+        android:label="Learning Word"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

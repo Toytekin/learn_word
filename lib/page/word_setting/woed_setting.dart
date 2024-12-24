@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,24 +8,27 @@ import 'package:learn_en/model/word_model.dart';
 import 'package:learn_en/router/router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 
-class WordAddScreen extends StatefulWidget {
-  const WordAddScreen({super.key});
+class WordSettingScreen extends StatefulWidget {
+  final WordModel wordModel;
+  const WordSettingScreen({
+    super.key,
+    required this.wordModel,
+  });
 
   @override
-  State<WordAddScreen> createState() => _WordAddScreenState();
+  State<WordSettingScreen> createState() => _WordSettingScreenState();
 }
 
-class _WordAddScreenState extends State<WordAddScreen> {
+class _WordSettingScreenState extends State<WordSettingScreen> {
   //String
   late String classID;
   // Controller
-  var mainWordController = TextEditingController();
-  var transWordController = TextEditingController();
-  var rememberWordController = TextEditingController();
-  var senteceWordController = TextEditingController();
-  var senteceTranslationController = TextEditingController();
+  late TextEditingController mainWordController;
+  late TextEditingController transWordController;
+  late TextEditingController rememberWordController;
+  late TextEditingController senteceWordController;
+  late TextEditingController senteceTranslationController;
 
 //File
   File? file;
@@ -36,6 +38,29 @@ class _WordAddScreenState extends State<WordAddScreen> {
   void initState() {
     super.initState();
     classID = context.read<ClasIDCubit>().state;
+    setController();
+  }
+
+  void setController() {
+    mainWordController = TextEditingController(text: widget.wordModel.word);
+    transWordController =
+        TextEditingController(text: widget.wordModel.translationWord);
+    rememberWordController =
+        TextEditingController(text: widget.wordModel.rememberWord);
+    senteceWordController =
+        TextEditingController(text: widget.wordModel.weodSentencce);
+    senteceTranslationController =
+        TextEditingController(text: widget.wordModel.weodSentencceTranslation);
+
+    // File değişkenini güvenli şekilde ayarla
+    if (widget.wordModel.wordImagePath != null) {
+      file = File(
+          widget.wordModel.wordImagePath!); // Path null değilse File oluştur.
+    } else {
+      file = null; // Path null ise file null olarak kalır.
+    }
+
+    setState(() {});
   }
 
   @override
@@ -55,7 +80,7 @@ class _WordAddScreenState extends State<WordAddScreen> {
               },
               icon: const Icon(Icons.arrow_back_ios)),
           automaticallyImplyLeading: false,
-          title: const Text('Word Add Page'),
+          title: const Text('Word Setting Page'),
         ),
         body: Center(
           child: Padding(
@@ -124,48 +149,70 @@ class _WordAddScreenState extends State<WordAddScreen> {
                   ),
                 ),
                 const Spacer(),
-                ElevatedButton(
-                    onPressed: () {
-                      if (mainWordController.text.isNotEmpty &&
-                          transWordController.text.isNotEmpty &&
-                          rememberWordController.text.isNotEmpty) {
-                        var newWordItem = WordModel(
-                          clasID: classID,
-                          wordID: const Uuid().v1(),
-                          word: mainWordController.text.toString(),
-                          translationWord: transWordController.text.toString(),
-                          rememberWord: rememberWordController.text.toString(),
-                          weodSentencce: senteceWordController.text.toString(),
-                          weodSentencceTranslation:
-                              senteceTranslationController.text.toString(),
-                          wordImagePath: file?.path,
-                        );
-                        context.read<WordCubbit>().wordADD(newWordItem);
-                        textfildClear();
-                        context.go(AppRoters.WORD);
-                      } else {
-                        // Snackbar gösterimi
-                        final snackBar = SnackBar(
-                          content: const Text(
-                              'Make sure that the Word, Translation, and Reminder fields are filled.'),
-                          action: SnackBarAction(
-                            label: 'Geri Al',
-                            onPressed: () {
-                              // Geri al butonuna basıldığında yapılacak işlemler
-                            },
-                          ),
-                        );
-                        // ScaffoldMessenger kullanarak Snackbar'ı göster
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
-                    },
-                    child: const Text('Save Word'))
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    deleteButton(context),
+                    updateButton(context),
+                  ],
+                )
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  ElevatedButton deleteButton(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 90, 7, 1)),
+      onPressed: () {
+        context.read<WordCubbit>().worDelete(widget.wordModel);
+        context.go(AppRoters.WORD);
+      },
+      child: const Text('Delete Word'),
+    );
+  }
+
+  ElevatedButton updateButton(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () {
+          if (mainWordController.text.isNotEmpty &&
+              transWordController.text.isNotEmpty &&
+              rememberWordController.text.isNotEmpty) {
+            var updateWordItem = WordModel(
+              clasID: widget.wordModel.clasID,
+              wordID: widget.wordModel.wordID,
+              word: mainWordController.text.toString(),
+              translationWord: transWordController.text.toString(),
+              rememberWord: rememberWordController.text.toString(),
+              weodSentencce: senteceWordController.text.toString(),
+              weodSentencceTranslation:
+                  senteceTranslationController.text.toString(),
+              wordImagePath: file?.path,
+            );
+            context.read<WordCubbit>().wordADD(updateWordItem);
+            context.go(AppRoters.WORD);
+            textfildClear();
+          } else {
+            // Snackbar gösterimi
+            final snackBar = SnackBar(
+              content: const Text(
+                  'Make sure that the Word, Translation, and Reminder fields are filled.'),
+              action: SnackBarAction(
+                label: 'Geri Al',
+                onPressed: () {
+                  // Geri al butonuna basıldığında yapılacak işlemler
+                },
+              ),
+            );
+            // ScaffoldMessenger kullanarak Snackbar'ı göster
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+        },
+        child: const Text('Update Word'));
   }
 
   Future<void> _pickImage() async {

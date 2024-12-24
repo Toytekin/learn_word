@@ -6,6 +6,7 @@ import 'package:learn_en/database/class_id.dart';
 import 'package:learn_en/database/word_add_serv.dart';
 import 'package:learn_en/model/word_model.dart';
 import 'package:learn_en/router/router.dart';
+import 'package:lottie/lottie.dart';
 
 class WordsScreen extends StatefulWidget {
   const WordsScreen({
@@ -34,7 +35,6 @@ class _WordsScreenState extends State<WordsScreen> {
   @override
   Widget build(BuildContext context) {
     // Ekran genişliğini alıyoruz
-    double sizeWidth = MediaQuery.of(context).size.width;
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
@@ -43,6 +43,14 @@ class _WordsScreenState extends State<WordsScreen> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
+            actions: [
+              InkWell(
+                  onTap: () {
+                    context.go(AppRoters.PLAY,
+                        extra: context.read<WordCubbit>().state);
+                  },
+                  child: LottieBuilder.asset('assets/lottie/animation.json')),
+            ],
             leading: IconButton(
                 onPressed: () {
                   context.go(AppRoters.HOME);
@@ -51,22 +59,32 @@ class _WordsScreenState extends State<WordsScreen> {
             automaticallyImplyLeading: false,
             title: const Text('Words'),
           ),
-          body: Center(child: BlocBuilder<WordCubbit, List<WordModel>>(
-            builder: (context, state) {
-              if (state.isNotEmpty) {
+          body: Center(
+            child: BlocBuilder<WordCubbit, List<WordModel>>(
+              builder: (context, state) {
+                if (state.isEmpty) {
+                  return const Center(child: Text('No words found.'));
+                }
+
                 return ListView.builder(
                   itemCount: state.length,
                   itemBuilder: (context, index) {
                     var item = state[index];
 
-                    return SbtCarWidget(item: item);
+                    return InkWell(
+                      onTap: () {
+                        context.go(
+                          AppRoters.WORD_SETTING,
+                          extra: item,
+                        );
+                      },
+                      child: SbtCarWidget(item: item),
+                    );
                   },
                 );
-              } else {
-                return const Text('Not Word');
-              }
-            },
-          )),
+              },
+            ),
+          ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               context.go(AppRoters.WORD_ADD);
