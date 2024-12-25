@@ -82,81 +82,83 @@ class _WordSettingScreenState extends State<WordSettingScreen> {
           automaticallyImplyLeading: false,
           title: const Text('Word Setting Page'),
         ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Column(
-              children: [
-                file != null
-                    ? InkWell(
-                        onTap: () {
-                          _pickImage();
-                        },
-                        child: Image.file(
-                          file!,
-                          width: sizeWidth / 2,
-                        ),
-                      )
-                    : IconButton(
-                        onPressed: () {
-                          _pickImage();
-                        },
-                        icon: const Icon(FontAwesomeIcons.photoFilm)),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: mainWordController,
-                  decoration: const InputDecoration(
-                    label: Text('Main Word'),
-                    prefixIcon: Icon(FontAwesomeIcons.fileWord),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Column(
+                children: [
+                  file != null
+                      ? InkWell(
+                          onTap: () {
+                            _pickImage();
+                          },
+                          child: Image.file(
+                            file!,
+                            width: sizeWidth / 2,
+                          ),
+                        )
+                      : IconButton(
+                          onPressed: () {
+                            _pickImage();
+                          },
+                          icon: const Icon(FontAwesomeIcons.photoFilm)),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: mainWordController,
+                    decoration: const InputDecoration(
+                      label: Text('Main Word'),
+                      prefixIcon: Icon(FontAwesomeIcons.fileWord),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: transWordController,
-                  decoration: const InputDecoration(
-                    label: Text('Translation'),
-                    prefixIcon: Icon(FontAwesomeIcons.fileWord),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: transWordController,
+                    decoration: const InputDecoration(
+                      label: Text('Translation'),
+                      prefixIcon: Icon(FontAwesomeIcons.fileWord),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                const Divider(),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: rememberWordController,
-                  decoration: const InputDecoration(
-                    label: Text('Reminiscence'),
-                    prefixIcon: Icon(FontAwesomeIcons.brain),
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: rememberWordController,
+                    decoration: const InputDecoration(
+                      label: Text('Reminiscence'),
+                      prefixIcon: Icon(FontAwesomeIcons.brain),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                const Divider(),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: senteceWordController,
-                  maxLines: 4,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.edit),
-                    label: Text('Sentence'),
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: senteceWordController,
+                    maxLines: 4,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.edit),
+                      label: Text('Sentence'),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  maxLines: 4,
-                  controller: senteceTranslationController,
-                  decoration: const InputDecoration(
-                    label: Text('Translation'),
-                    prefixIcon: Icon(Icons.edit),
+                  const SizedBox(height: 10),
+                  TextField(
+                    maxLines: 4,
+                    controller: senteceTranslationController,
+                    decoration: const InputDecoration(
+                      label: Text('Translation'),
+                      prefixIcon: Icon(Icons.edit),
+                    ),
                   ),
-                ),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    deleteButton(context),
-                    updateButton(context),
-                  ],
-                )
-              ],
+                  const SizedBox(height: 100),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      deleteButton(context),
+                      updateButton(context),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -178,6 +180,9 @@ class _WordSettingScreenState extends State<WordSettingScreen> {
 
   ElevatedButton updateButton(BuildContext context) {
     return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 30, 74, 32),
+        ),
         onPressed: () {
           if (mainWordController.text.isNotEmpty &&
               transWordController.text.isNotEmpty &&

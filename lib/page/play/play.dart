@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import 'package:go_router/go_router.dart';
 import 'package:learn_en/model/word_model.dart';
+import 'package:learn_en/page/home/home.dart';
+import 'package:learn_en/router/router.dart';
 
 class PlayScreen extends StatefulWidget {
   final List<WordModel> words;
@@ -41,7 +44,7 @@ class _PlayScreenState extends State<PlayScreen> {
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              context.go(AppRoters.WORD);
             },
             icon: const Icon(Icons.arrow_back_ios_new),
           ),
@@ -74,8 +77,12 @@ class _PlayScreenState extends State<PlayScreen> {
                       children: [
                         shuffledWords[index].wordImagePath != null
                             ? Image.file(
-                                File(shuffledWords[index].wordImagePath!))
+                                File(shuffledWords[index].wordImagePath!),
+                                width: sizeWidth / 3,
+                                height: sizeWidth / 3,
+                              )
                             : const SizedBox(),
+                        const SizedBox(height: 20),
                         Text(
                           shuffledWords[index].word,
                           style: const TextStyle(
@@ -87,9 +94,9 @@ class _PlayScreenState extends State<PlayScreen> {
                         Text(
                           shuffledWords[index].rememberWord,
                           style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                          ),
+                              fontSize: 20,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w700),
                         ),
                         shuffledWords[index].weodSentencce != null
                             ? Text(
@@ -126,8 +133,14 @@ class _PlayScreenState extends State<PlayScreen> {
                       children: [
                         shuffledWords[index].wordImagePath != null
                             ? Image.file(
-                                File(shuffledWords[index].wordImagePath!))
+                                File(
+                                  shuffledWords[index].wordImagePath!,
+                                ),
+                                width: sizeWidth / 3,
+                                height: sizeWidth / 3,
+                              )
                             : const SizedBox(),
+                        const SizedBox(height: 20),
                         Text(
                           shuffledWords[index].translationWord,
                           style: const TextStyle(
@@ -140,7 +153,7 @@ class _PlayScreenState extends State<PlayScreen> {
                           shuffledWords[index].rememberWord,
                           style: const TextStyle(
                             fontSize: 20,
-                            color: Colors.white,
+                            color: Colors.grey,
                           ),
                         ),
                         shuffledWords[index].weodSentencce != null
