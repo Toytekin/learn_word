@@ -5,7 +5,6 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learn_en/model/word_model.dart';
-import 'package:learn_en/page/home/home.dart';
 import 'package:learn_en/router/router.dart';
 
 class PlayScreen extends StatefulWidget {
